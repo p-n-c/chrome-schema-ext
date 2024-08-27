@@ -1,0 +1,40 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: white;
+}
+
+details, #schema-content div div {
+  margin: .25rem;
+  padding: .5rem;
+  border: 1px dotted darkgray;
+  border-radius: .25rem;
+}
+
+details div:first-child {
+  margin-top: .5rem;
+}
+
+#schema-content details:last-child, details div:last-child {
+  margin-bottom: 0 !important;
+}
+
+#close-schema-iframe {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  border: 1px solid darkgray;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  z-index: 10001;
+}
+
+#schema-content {
+  font-family: monospace;
+  font-size: 14px;
+  color: #333;
+  margin-top: 40px;
+}

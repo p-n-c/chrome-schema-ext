@@ -1,7 +1,5 @@
-// import {
-//   parseHtmlDocumentInBrowser,
-//   generateSchema,
-// } from './schema.js'
+chrome.runtime.onMessage.addListener((request) => {
+  if (request.action === 'generateSchema') {
 
 const treeElements = [
   'a',
@@ -13,6 +11,7 @@ const treeElements = [
   'caption',
   'details',
   'dialog',
+  'div',
   'dd',
   'dl',
   'dt',
@@ -56,6 +55,21 @@ const treeElements = [
   'ul',
 ]
 
+const treeElementsWithText = [
+  'a',
+  'button',
+  'caption',
+  'details',
+  'figcaption',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'label'
+]
+
 const htmlStringToDomElement = (htmlString) => {
   const container = document.createElement('div')
   container.innerHTML = htmlString.trim()
@@ -92,7 +106,13 @@ const isValidNode = (node) => {
 
 const buildHtmlTree = (element) => {
   // Initialize an object to represent this element
-  let tree = {
+  let includeText = treeElementsWithText.includes(element.nodeName.toLowerCase())
+  let tree = includeText
+  ? {
+    tag: `${element.tagName.toLowerCase()} ${element.innerText}`,
+    children: [],
+  }
+  : {
     tag: element.tagName.toLowerCase(),
     children: [],
   }
@@ -101,7 +121,7 @@ const buildHtmlTree = (element) => {
   const children = element.children
   for (let child of children) {
     if (isValidNode(child)) {
-      // Only process elements (ignore text, comments, etc.)
+      // Only process elements (ignore text, comments, etc.)      
       tree.children.push(buildHtmlTree(child))
     }
   }
@@ -119,7 +139,7 @@ const generateTrees = (tree) => {
   const children = tree?.children || []
   // Base case: if there are no children, return a div with just the tag name
   if (children?.length === 0) {
-    return `<div>${tree.tag}</div>`
+    return `<div class='tag'>${tree.tag}</div>`
   }
 
   // Recursive case: create a details element with a summary and nested details
@@ -150,12 +170,87 @@ const generateSchema = (treeStructure) => {
 
 (async () => {
   const treeStructure = parseHtmlDocumentInBrowser()
-  const container = document.getElementById('schema')
-  
-  if (container) {
-    const schema = generateSchema(treeStructure)
-    container.appendChild(schema)
-  } else {
-    console.error("Element with id 'schema' not found.")
-  }
+  const container = document.getElementsByTagName('body')[0]
+
+
+  const schema = generateSchema(treeStructure)
+
+  // Add a container with a header
+  const tree = htmlStringToDomElement(`
+          <h3>Schema</h3>
+          <div></div>      
+    `)
+   
+    tree.querySelector('div').appendChild(schema)
+
+    // Create an iframe
+    const iframe = document.createElement('iframe')
+    iframe.id = 'schema-iframe'
+    iframe.style.position = 'fixed'
+    iframe.style.top = '10%'
+    iframe.style.left = '10%'
+    iframe.style.width = '80%'
+    iframe.style.height = '80%'
+    iframe.style.zIndex = '10000'
+    iframe.style.border = 'none'
+    iframe.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)'
+    iframe.style.borderRadius = '8px'
+
+          // Append the iframe to the body
+          document.body.appendChild(iframe)
+
+          // Access the iframe's document and write the content
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
+          iframeDoc.open()
+          iframeDoc.write(`
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+              <meta charset="UTF-8">
+              <title>Schema Output</title>
+              <link rel="stylesheet" type="text/css" href="${chrome.runtime.getURL('iframeStyles.css')}">
+            </head>
+            <body>
+              <h1>HTML Schema</h1>
+              <button id="close-schema-iframe">Close</button>
+              <div id="schema-content"></div>
+              <script src="${chrome.runtime.getURL('iframeScript.js')}"></script>
+            </body>
+            </html>
+          `)
+          iframeDoc.close()
+    
+          // Insert the schema into the iframe's content
+          const schemaContainer = iframeDoc.getElementById('schema-content')
+          schemaContainer.appendChild(schema)
+
+    // // Create an overlay pane
+    // const pane = document.createElement('div')
+    // pane.id = 'schema-overlay'
+    
+    // // Create a close button
+    // const closeButton = document.createElement('button')
+    // closeButton.id = 'close-schema-overlay'
+    // closeButton.textContent = 'Close'
+
+    // // Insert the generated schema into the pane
+    // const schemaContainer = document.createElement('div')
+    // schemaContainer.id = 'schema-content'
+    // schemaContainer.appendChild(schema)
+
+    // // Append the close button and schema content to the pane
+    // pane.appendChild(closeButton)
+    // pane.appendChild(schemaContainer)
+
+    // // Append panel to iframe
+    
+    // // Append the iframe to the body
+    // document.body.appendChild(iframe)
+
+    // // Add event listener to close the pane
+    // closeButton.addEventListener('click', () => {
+    //   iframe.remove()
+    // })
 })()
+}
+})
