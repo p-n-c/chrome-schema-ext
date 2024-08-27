@@ -1,0 +1,14 @@
+#schema {
+  padding: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  overflow-x: auto;
+}
+
+#schema code {
+  white-space: pre-wrap;
+  display: block;
+  color: #333;
+}
