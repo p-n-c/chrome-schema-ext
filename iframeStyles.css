@@ -6,18 +6,20 @@ body {
   background-color: white;
 }
 
-details, #schema-content div div {
-  margin: .25rem;
-  padding: .5rem;
+details,
+#schema-content div div {
+  margin: 0.25rem;
+  padding: 0.5rem;
   border: 1px dotted darkgray;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
 }
 
 details div:first-child {
-  margin-top: .5rem;
+  margin-top: 0.5rem;
 }
 
-#schema-content details:last-child, details div:last-child {
+#schema-content details:last-child,
+details div:last-child {
   margin-bottom: 0 !important;
 }
 
