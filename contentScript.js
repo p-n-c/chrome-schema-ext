@@ -196,61 +196,33 @@ const generateSchema = (treeStructure) => {
     iframe.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)'
     iframe.style.borderRadius = '8px'
 
-          // Append the iframe to the body
-          document.body.appendChild(iframe)
+    // Append the iframe to the body
+    document.body.appendChild(iframe)
 
-          // Access the iframe's document and write the content
-          const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
-          iframeDoc.open()
-          iframeDoc.write(`
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-              <meta charset="UTF-8">
-              <title>Schema Output</title>
-              <link rel="stylesheet" type="text/css" href="${chrome.runtime.getURL('iframeStyles.css')}">
-            </head>
-            <body>
-              <h1>HTML Schema</h1>
-              <button id="close-schema-iframe">Close</button>
-              <div id="schema-content"></div>
-              <script src="${chrome.runtime.getURL('iframeScript.js')}"></script>
-            </body>
-            </html>
-          `)
-          iframeDoc.close()
-    
-          // Insert the schema into the iframe's content
-          const schemaContainer = iframeDoc.getElementById('schema-content')
-          schemaContainer.appendChild(schema)
+    // Access the iframe's document and write the content
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document
+    iframeDoc.open()
+    iframeDoc.write(`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>Schema Output</title>
+        <link rel="stylesheet" type="text/css" href="${chrome.runtime.getURL('iframeStyles.css')}">
+      </head>
+      <body>
+        <h1>HTML Schema</h1>
+        <button id="close-schema-iframe">Close</button>
+        <div id="schema-content"></div>
+        <script src="${chrome.runtime.getURL('iframeScript.js')}"></script>
+      </body>
+      </html>
+    `)
+    iframeDoc.close()
 
-    // // Create an overlay pane
-    // const pane = document.createElement('div')
-    // pane.id = 'schema-overlay'
-    
-    // // Create a close button
-    // const closeButton = document.createElement('button')
-    // closeButton.id = 'close-schema-overlay'
-    // closeButton.textContent = 'Close'
-
-    // // Insert the generated schema into the pane
-    // const schemaContainer = document.createElement('div')
-    // schemaContainer.id = 'schema-content'
-    // schemaContainer.appendChild(schema)
-
-    // // Append the close button and schema content to the pane
-    // pane.appendChild(closeButton)
-    // pane.appendChild(schemaContainer)
-
-    // // Append panel to iframe
-    
-    // // Append the iframe to the body
-    // document.body.appendChild(iframe)
-
-    // // Add event listener to close the pane
-    // closeButton.addEventListener('click', () => {
-    //   iframe.remove()
-    // })
+    // Insert the schema into the iframe's content
+    const schemaContainer = iframeDoc.getElementById('schema-content')
+    schemaContainer.appendChild(schema)
 })()
 }
 })
