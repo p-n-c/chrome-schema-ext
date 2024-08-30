@@ -1,5 +1,8 @@
 chrome.runtime.onMessage.addListener((request) => {
   if (request.action === 'generateSchema') {
+    // Remove existing iframe
+    document.getElementById('schema-iframe')?.remove()
+
     const treeElements = [
       'a',
       'address',
@@ -68,6 +71,9 @@ chrome.runtime.onMessage.addListener((request) => {
       'h6',
       'label',
     ]
+    const landmarks = ['banner', 'footer', 'form', 'header', 'main', 'navigation', 'search']
+    const landmarkRoles = ['contentinfo', 'complementary', 'region']
+    const attributes = ['alt']
 
     const htmlStringToDomElement = (htmlString) => {
       const container = document.createElement('div')
@@ -103,36 +109,52 @@ chrome.runtime.onMessage.addListener((request) => {
         : false
     }
 
-    const buildHtmlTree = (element) => {
-      // Initialize an object to represent this element
-      let includeText = treeElementsWithText.includes(
+    const matchFirstAttribute = (attributes, matches) => {
+      return attributes.find(attr => matches.includes(attr))
+    }
+
+    const createNode = (element) => {
+      let text = element.tagName.toLowerCase()
+
+      // Add text for selected elements
+      const includeText = treeElementsWithText.includes(
         element.nodeName.toLowerCase()
-      )
-      let tree = includeText
-        ? {
-            tag: `${element.tagName.toLowerCase()} ${element.innerText}`,
-            children: [],
-          }
-        : {
-            tag: element.tagName.toLowerCase(),
-            children: [],
-          }
+      )      
+      if(includeText) {
+        text = `${element.tagName.toLowerCase()} ${element.innerText}`
+      }
+
+      // Add text for selected attributes, and show attribute name
+      const match = matchFirstAttribute(attributes, element.getAttributeNames())      
+      if(match) {
+        text = `${match}: ${element.getAttribute(match)}`
+      }
+
+      // Initialise and return the tree
+      return {
+        tag: text,
+        children: [],
+      }
+    }
+
+    const buildHtmlTree = (element) => {
+      const node = createNode(element)
 
       // Recursively process each child element
       const children = element.children
       for (let child of children) {
         if (isValidNode(child)) {
           // Only process elements (ignore text, comments, etc.)
-          tree.children.push(buildHtmlTree(child))
+          node.children.push(buildHtmlTree(child))
         }
       }
 
-      if (tree.children.length === 0) {
-        delete tree.children
+      if (node.children.length === 0) {
+        delete node.children
       }
 
-      if (tree.tag !== 'script') {
-        return tree
+      if (node.tag !== 'script') {
+        return node
       }
     }
 

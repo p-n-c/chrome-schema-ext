@@ -3,20 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <title>HTML Schema Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       body {
         font-family: Arial, sans-serif;
-        margin: 10px;
+        margin: 24px;
+        width: 400px;
+      }
+      h1 {
+        font-size: 18px;
+        font-weight: normal;
+      }
+      p {
+        font-size: 14px;
       }
       button {
         padding: 10px 20px;
-        font-size: 16px;
+        font-size: 14px;
         border-radius: 4px;
       }
     </style>
   </head>
   <body>
-    <h3>HTML Schema Generator</h3>
+    <h1>HTML Schema Generator</h1>
+    <p>Create a schema of the current page.</p>
+    <p>
+      Headers, navigation text, button text and image alt tags are maintained.
+    </p>
     <button id="generate-schema">Generate Schema</button>
     <script src="popup.js"></script>
   </body>
