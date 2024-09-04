@@ -6,9 +6,36 @@ body {
   background-color: white;
 }
 
+button {
+  border: 1px solid darkgray;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  z-index: 10001;
+  font-size: 14px;
+}
+
 details,
 details div:first-child {
   margin-top: 0.5rem;
+}
+
+details[open] > :not(summary) {
+  margin-left: 1rem;
+}
+
+details[open] {
+  position: relative;
+}
+
+details[open]::before {
+  content: '';
+  position: absolute;
+  top: 1em;
+  left: 0.25rem;
+  bottom: 0;
+  width: 0;
+  border-left: 1px dotted darkgrey;
 }
 
 #schema-content details:last-child,
@@ -20,6 +47,7 @@ details div:last-child {
   margin: 0.25rem;
   padding: 0.5rem;
   border: 1px dotted darkgray;
+  border-left: 0;
   border-radius: 0.25rem;
 }
 
@@ -27,12 +55,6 @@ details div:last-child {
   position: fixed;
   top: 10px;
   right: 10px;
-  border: 1px solid darkgray;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 4px;
-  z-index: 10001;
-  font-size: 14px;
 }
 
 #schema-content {

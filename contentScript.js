@@ -45,6 +45,8 @@ const displaySchema = () => {
       <body>
         <h1>HTML Schema</h1>
         <button id="close-schema-iframe">Close</button>
+        <button id="expand-schema">Expand</button>
+        <button id="collapse-schema">Collapse</button>
         <div id="schema-content"></div>
         <script src="${chrome.runtime.getURL('iframeScript.js')}"></script>
       </body>
