@@ -33,7 +33,7 @@ details[open]::before {
   position: absolute;
   top: 1em;
   left: 0.25rem;
-  bottom: 0;
+  bottom: 0.25rem;
   width: 0;
   border-left: 1px dotted darkgrey;
 }
