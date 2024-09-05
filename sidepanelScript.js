@@ -1,0 +1,31 @@
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('Side panel DOM content loaded')
+  chrome.runtime.sendMessage({ action: 'displaySchema' })
+
+  document
+    .getElementById('expand-schema')
+    .addEventListener('click', function () {
+      document
+        .querySelectorAll('details')
+        .forEach((details) => (details.open = true))
+    })
+
+  document
+    .getElementById('collapse-schema')
+    .addEventListener('click', function () {
+      document
+        .querySelectorAll('details')
+        .forEach((details) => (details.open = false))
+    })
+})
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'updateSchema') {
+    displaySchema(message.schema)
+  }
+})
+
+function displaySchema(schemaHTML) {
+  const schemaContainer = document.getElementById('schema-content')
+  schemaContainer.innerHTML = `${schemaHTML}`
+}

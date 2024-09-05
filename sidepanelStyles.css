@@ -51,12 +51,6 @@ details div:last-child {
   border-radius: 0.25rem;
 }
 
-#close-schema-iframe {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-}
-
 #schema-content {
   font-family: monospace;
   font-size: 14px;
