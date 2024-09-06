@@ -1,0 +1,27 @@
+
+Single purpose description
+
+Generate schema from DOM
+
+activeTab justification
+
+The "HTML Schema Generator" extension requires the activeTab permission to function properly by allowing it to analyse the HTML content of the currently active tab when the user activates the extension.
+Key Points:
+User Control: The activeTab permission ensures that the extension only interacts with the content of the current tab when explicitly initiated by the user, providing full control over when and where the extension is used.
+Limited Access: This permission grants access only to the tab that the user is currently viewing and has activated the extension on, ensuring minimal data exposure and maintaining user privacy.
+Essential Functionality: The extension needs to access the HTML of the active tab to generate the schema. Without activeTab, it cannot perform this core function.
+Privacy Respect: The extension does not store or transmit any data from the active tab. It only reads the necessary HTML content to generate the schema as requested by the user.
+
+
+Host permission justification
+
+The "HTML Schema Generator" extension requires access to *://*/* because its primary function is to analyse and parse the HTML structure of any webpage the user visits to generate an accurate HTML schema.
+
+Key Reasons:
+
+Core Functionality: The extension needs to read the HTML content of any webpage to create the schema. Without this permission, it cannot perform its essential task.
+
+User-initiated Use: The extension operates only when explicitly activated by the user, ensuring that it only interacts with web pages upon user request.
+
+Privacy and Data Use: The extension only reads and processes the HTML content needed to generate the schema. It does not collect, store, or transmit any user data from the pages it processes.
+Transparency: Users are informed of the extension’s capabilities and the necessity of this permission through its description and documentation.
