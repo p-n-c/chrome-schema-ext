@@ -23,9 +23,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'updateSchema') {
     displaySchema(message.schema)
   }
+  if (message.action === 'updateTitle') {
+    displayTitle(message.title)
+  }
 })
 
 function displaySchema(schemaHTML) {
   const schemaContainer = document.getElementById('schema-content')
   schemaContainer.innerHTML = `${schemaHTML}`
+}
+
+function displayTitle(title) {
+  const titleContainer = document.getElementById('title-content')
+  titleContainer.innerHTML += ` ${title}`
 }
