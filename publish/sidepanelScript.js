@@ -37,10 +37,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 function displaySchema(schemaHTML) {
   const schemaContainer = document.getElementById('schema-content')
-  schemaContainer.innerHTML = `${schemaHTML}`
+  if (schemaHTML === null)
+    schemaContainer.innerHTML = 'Refresh page and hit Regenerate ↺'
+  else schemaContainer.innerHTML = `${schemaHTML}`
 }
 
 function displayTitle(title) {
   const titleContainer = document.getElementById('title-content')
-  titleContainer.innerHTML = `Page: ${title}`
+  if (title === null)
+    titleContainer.innerHTML = 'Error: Extension loaded after page'
+  else titleContainer.innerHTML = `Page: ${title}`
 }
