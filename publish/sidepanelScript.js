@@ -17,6 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
         .querySelectorAll('details')
         .forEach((details) => (details.open = false))
     })
+
+  document
+    .getElementById('regenerate-schema')
+    .addEventListener('click', function () {
+      console.log('Regenerating schema')
+      chrome.runtime.sendMessage({ action: 'displaySchema' })
+    })
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -35,5 +42,5 @@ function displaySchema(schemaHTML) {
 
 function displayTitle(title) {
   const titleContainer = document.getElementById('title-content')
-  titleContainer.innerHTML += ` ${title}`
+  titleContainer.innerHTML = `Page: ${title}`
 }
