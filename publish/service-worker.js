@@ -4,6 +4,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.action.onClicked.addListener((tab) => {
   chrome.sidePanel.open({ tabId: tab.id })
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -26,6 +27,22 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           }
         }
       )
+      chrome.scripting.executeScript(
+        {
+          target: { tabId: tabs[0].id },
+          function: generateTitle,
+        },
+        (results) => {
+          if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError)
+          } else if (results && results[0]) {
+            chrome.runtime.sendMessage({
+              action: 'updateTitle',
+              title: results[0].result,
+            })
+          }
+        }
+      )
     })
   }
 })
@@ -34,4 +51,8 @@ function generateAndSendSchema() {
   const treeStructure = parseHtmlDocumentInBrowser()
   const schemaHtml = generateSchemaHtml(treeStructure)
   return schemaHtml.outerHTML
+}
+
+function generateTitle() {
+  return getTitle()
 }

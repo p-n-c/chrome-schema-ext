@@ -3,3 +3,7 @@ const htmlStringToDomElement = (htmlString) => {
   container.innerHTML = htmlString.trim()
   return container
 }
+
+const getTitle = () => {
+  return document.title
+}
