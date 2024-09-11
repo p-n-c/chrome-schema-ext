@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "HTML Schema Generator",
-  "version": "0.0.0.1",
+  "version": "0.0.1.0",
   "description": "Parses a page's HTML and returns an HTML schema.",
   "background": {
     "service_worker": "service-worker.js"
