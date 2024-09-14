@@ -6,7 +6,7 @@
   "background": {
     "service_worker": "background/service-worker.js"
   },
-  "permissions": ["activeTab", "scripting", "sidePanel"],
+  "permissions": ["activeTab", "scripting", "sidePanel", "contextMenus"],
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {

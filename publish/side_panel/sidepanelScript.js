@@ -1,5 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Side panel DOM content loaded')
+  console.log(`${chrome.runtime.id}`)
+
+  chrome.contextMenus.create({
+    id: 'mdn-consult',
+    title: 'Check MDN',
+    contexts: ['selection'],
+    documentUrlPatterns: [
+      `chrome-extension://${chrome.runtime.id}/side_panel/sidepanel.html`,
+    ],
+  })
+
+  document.addEventListener('contextmenu', function (e) {
+    const caretPosition = document.caretPositionFromPoint(e.clientX, e.clientY)
+    const range = document.createRange()
+    range.setStart(caretPosition.offsetNode, caretPosition.offset)
+    range.setEnd(caretPosition.offsetNode, caretPosition.offset)
+    if (range) {
+      range.expand('word')
+      const selection = window.getSelection()
+      selection.removeAllRanges()
+      selection.addRange(range)
+    }
+  })
+
   chrome.runtime.sendMessage({ action: 'displaySchema' })
 
   document
