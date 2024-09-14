@@ -1,26 +1,45 @@
+function openOrReloadWindow(url, windowName) {
+  const parsedUrl = new URL(url)
+  const baseUrl = `${parsedUrl.protocol}//${parsedUrl.hostname}`
+  const existingWindow = window.open('', windowName)
+  if (existingWindow) {
+    existingWindow.location.href = url
+  } else {
+    window.open(url, windowName)
+  }
+}
+
+function extendSelectionToWord() {
+  let selection = document.getSelection()
+  selection.modify('move', 'backward', 'word')
+  selection.modify('extend', 'forward', 'word')
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Side panel DOM content loaded')
-  console.log(`${chrome.runtime.id}`)
 
   chrome.contextMenus.create({
     id: 'mdn-consult',
-    title: 'Check MDN',
+    title: 'Search MDN for "%s"',
     contexts: ['selection'],
     documentUrlPatterns: [
       `chrome-extension://${chrome.runtime.id}/side_panel/sidepanel.html`,
     ],
   })
 
-  document.addEventListener('contextmenu', function (e) {
-    const caretPosition = document.caretPositionFromPoint(e.clientX, e.clientY)
-    const range = document.createRange()
-    range.setStart(caretPosition.offsetNode, caretPosition.offset)
-    range.setEnd(caretPosition.offsetNode, caretPosition.offset)
-    if (range) {
-      range.expand('word')
-      const selection = window.getSelection()
-      selection.removeAllRanges()
-      selection.addRange(range)
+  document.addEventListener('contextmenu', extendSelectionToWord)
+
+  chrome.contextMenus.onClicked.addListener(function (info) {
+    switch (info.menuItemId) {
+      case 'mdn-consult':
+        const selection = document.getSelection()
+        selectedText = selection.toString()
+        openOrReloadWindow(
+          `https://developer.mozilla.org/en-US/docs/Web/HTML/Element/${selectedText}`,
+          'mdn-from-sidepanel'
+        )
+      // Maybe remove the selection once the MDN is displayed?
+      // selection.removeAllRanges()
     }
   })
 

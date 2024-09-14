@@ -57,3 +57,8 @@ details div:last-child {
   color: #333;
   margin-top: 40px;
 }
+
+::selection {
+  background-color: black;
+  color: white;
+}
