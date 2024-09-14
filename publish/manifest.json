@@ -1,17 +1,21 @@
 {
   "manifest_version": 3,
   "name": "HTML Schema Generator",
-  "version": "0.0.0.1",
+  "version": "0.0.1.0",
   "description": "Parses a page's HTML and returns an HTML schema.",
   "background": {
-    "service_worker": "service-worker.js"
+    "service_worker": "background/service-worker.js"
   },
-  "permissions": ["activeTab", "scripting", "sidePanel"],
+  "permissions": ["activeTab", "scripting", "sidePanel", "contextMenus"],
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["utils.js", "treeBuilder.js", "schemaGenerator.js"]
+      "js": [
+        "content_scripts/utils.js",
+        "content_scripts/treeBuilder.js",
+        "content_scripts/schemaGenerator.js"
+      ]
     }
   ],
   "action": {
@@ -24,6 +28,6 @@
     "128": "icons/icon128.png"
   },
   "side_panel": {
-    "default_path": "sidepanel.html"
+    "default_path": "side_panel/sidepanel.html"
   }
 }
