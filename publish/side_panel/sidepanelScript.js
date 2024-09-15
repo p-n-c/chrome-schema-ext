@@ -15,6 +15,18 @@ function extendSelectionToWord() {
   selection.modify('extend', 'forward', 'word')
 }
 
+function toggleVisibility(className, isVisible) {
+  if (isVisible) {
+    document
+      .querySelectorAll(`.${className}`)
+      .forEach((el) => el.classList.remove('hidden'))
+  } else {
+    document
+      .querySelectorAll(`.${className}`)
+      .forEach((el) => el.classList.add('hidden'))
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Side panel DOM content loaded')
 
@@ -66,6 +78,25 @@ document.addEventListener('DOMContentLoaded', () => {
     .addEventListener('click', function () {
       console.log('Regenerating schema')
       chrome.runtime.sendMessage({ action: 'displaySchema' })
+    })
+
+  document
+    .getElementById('display-attribute')
+    .addEventListener('change', function () {
+      console.log(document.getElementById('display-attribute').checked)
+      toggleVisibility(
+        'attribute',
+        document.getElementById('display-attribute').checked
+      )
+    })
+
+  document
+    .getElementById('display-element-text')
+    .addEventListener('change', function () {
+      toggleVisibility(
+        'element-text',
+        document.getElementById('display-element-text').checked
+      )
     })
 })
 

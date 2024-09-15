@@ -4,11 +4,11 @@ const generateTreeHtml = (tree) => {
   let nodeText = `<span class='tag'>${tree.tag}</span>`
 
   if (tree.attribute.length != 0) {
-    nodeText += ` <span class='attribute'>${tree.attribute}</span>`
+    nodeText += ` <span class='attribute hidden'>${tree.attribute}</span>`
   }
 
   if (tree.elementText.length != 0) {
-    nodeText += ` <span class='element-text'>${tree.elementText}</span>`
+    nodeText += ` <span class='element-text hidden'>${tree.elementText}</span>`
   }
 
   // Base case: if there are no children, return a span with just the tag name
