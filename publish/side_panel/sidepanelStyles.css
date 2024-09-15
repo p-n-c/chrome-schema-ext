@@ -62,3 +62,11 @@ details div:last-child {
   background-color: black;
   color: white;
 }
+
+.attribute::before {
+  content: '| ';
+}
+
+.element-text::before {
+  content: '> ';
+}
