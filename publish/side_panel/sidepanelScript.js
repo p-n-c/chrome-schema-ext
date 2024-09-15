@@ -9,8 +9,7 @@ function openOrReloadWindow(url, windowName) {
   }
 }
 
-function extendSelectionToWord() {
-  let selection = document.getSelection()
+function extendSelectionToWord(selection) {
   selection.modify('move', 'backward', 'word')
   selection.modify('extend', 'forward', 'word')
 }
@@ -39,7 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ],
   })
 
-  document.addEventListener('contextmenu', extendSelectionToWord)
+  // Only select the whole word on right click if it's a tag
+  document.addEventListener('contextmenu', () => {
+    let selection = document.getSelection()
+    if (selection.anchorNode.parentElement.classList.contains('tag')) {
+      extendSelectionToWord(selection)
+    }
+  })
 
   chrome.contextMenus.onClicked.addListener(function (info) {
     switch (info.menuItemId) {
