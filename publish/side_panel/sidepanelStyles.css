@@ -62,3 +62,7 @@ details div:last-child {
   background-color: black;
   color: white;
 }
+
+.highlight-button {
+  color: black;
+}

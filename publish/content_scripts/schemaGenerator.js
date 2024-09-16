@@ -1,8 +1,9 @@
 const generateTreeHtml = (tree) => {
   const children = tree?.children || []
+  const button = `<button type='button' title='Highlight in page' id='${tree.id}' class='highlight-button'>🖍</button>`
   // Base case: if there are no children, return a div with just the tag name
   if (children?.length === 0) {
-    return `<div class='tag' data-id='${tree.id}'>${tree.tag}</div>`
+    return `<div class='tag'>${button} ${tree.tag}</div>`
   }
 
   // Recursive case: create a details element with a summary and nested details
@@ -13,7 +14,7 @@ const generateTreeHtml = (tree) => {
 
   return `
     <details>
-        <summary data-id='${tree.id}'>${tree.tag}</summary>
+        <summary>${button} ${tree.tag}</summary>
         ${childrenHtml}
     </details>
 `

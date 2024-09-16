@@ -9,41 +9,44 @@ chrome.action.onClicked.addListener((tab) => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('Message received:', message)
-  if (message.action === 'displaySchema') {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.scripting.executeScript(
-        {
-          target: { tabId: tabs[0].id },
-          function: generateAndSendSchema,
-        },
-        (results) => {
-          if (chrome.runtime.lastError) {
-            console.error(chrome.runtime.lastError)
-          } else if (results && results[0]) {
-            chrome.runtime.sendMessage({
-              action: 'updateSchema',
-              schema: results[0].result,
-            })
+  switch (message.action) {
+    case 'displaySchema':
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.scripting.executeScript(
+          {
+            target: { tabId: tabs[0].id },
+            function: generateAndSendSchema,
+          },
+          (results) => {
+            if (chrome.runtime.lastError) {
+              console.error(chrome.runtime.lastError)
+            } else if (results && results[0]) {
+              chrome.runtime.sendMessage({
+                action: 'updateSchema',
+                schema: results[0].result,
+              })
+            }
           }
-        }
-      )
-      chrome.scripting.executeScript(
-        {
-          target: { tabId: tabs[0].id },
-          function: generateTitle,
-        },
-        (results) => {
-          if (chrome.runtime.lastError) {
-            console.error(chrome.runtime.lastError)
-          } else if (results && results[0]) {
-            chrome.runtime.sendMessage({
-              action: 'updateTitle',
-              title: results[0].result,
-            })
+        )
+        chrome.scripting.executeScript(
+          {
+            target: { tabId: tabs[0].id },
+            function: generateTitle,
+          },
+          (results) => {
+            if (chrome.runtime.lastError) {
+              console.error(chrome.runtime.lastError)
+            } else if (results && results[0]) {
+              chrome.runtime.sendMessage({
+                action: 'updateTitle',
+                title: results[0].result,
+              })
+            }
           }
-        }
-      )
-    })
+        )
+      })
+    case 'highlightElement':
+      console.log(message.elementId)
   }
 })
 

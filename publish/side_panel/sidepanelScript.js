@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('Side panel DOM content loaded')
 
   chrome.contextMenus.create({
+    // TODO check if it's already there
     id: 'mdn-consult',
     title: 'Search MDN for "%s"',
     contexts: ['selection'],
@@ -72,6 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'updateSchema') {
     displaySchema(message.schema)
+    document.querySelectorAll('.highlight-button').forEach((el) => {
+      el.addEventListener('click', function (event) {
+        chrome.runtime.sendMessage({
+          action: 'highlightElement',
+          elementId: event.target.id,
+        })
+      })
+    })
   }
   if (message.action === 'updateTitle') {
     displayTitle(message.title)
