@@ -38,6 +38,10 @@ details[open]::before {
   border-left: 1px dotted darkgrey;
 }
 
+#display-controls {
+  margin-top: 1rem;
+}
+
 #schema-content details:last-child,
 details div:last-child {
   margin-bottom: 0 !important;
@@ -61,4 +65,26 @@ details div:last-child {
 ::selection {
   background-color: black;
   color: white;
+}
+
+.attribute::before {
+  content: '| ';
+}
+
+.checkbox-container {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.checkbox-container input[type='checkbox'] {
+  margin-right: 0.3rem;
+}
+
+.element-text::before {
+  content: '> ';
+}
+
+.hidden {
+  display: none;
 }

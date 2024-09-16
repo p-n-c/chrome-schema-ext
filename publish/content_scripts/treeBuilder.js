@@ -42,6 +42,7 @@ const treeElements = [
   'progress',
   'search',
   'select',
+  'section',
   'summary',
   'table',
   'td',
@@ -66,6 +67,7 @@ const treeElementsWithText = [
   'h6',
   'label',
 ]
+
 const landmarks = [
   'banner',
   'footer',
@@ -76,7 +78,8 @@ const landmarks = [
   'search',
 ]
 const landmarkRoles = ['contentinfo', 'complementary', 'region']
-const attributes = ['alt']
+
+const attributes = ['alt', 'id', 'class']
 
 const isValidElement = (node) => {
   return node.nodeType === 1
@@ -122,27 +125,29 @@ const buildHtmlTree = (element) => {
 }
 
 const createNode = (element) => {
-  let text = element.tagName.toLowerCase()
+  const node = {
+    tag: element.tagName.toLowerCase(),
+    attribute: '',
+    elementText: '',
+    children: [],
+  }
+
+  // Add text for selected attributes, and show attribute name
+  const match = matchFirstAttribute(attributes, element.getAttributeNames())
+  if (match) {
+    node.attribute = `${match}: ${element.getAttribute(match)}`
+  }
 
   // Add text for selected elements
   const includeText = treeElementsWithText.includes(
     element.nodeName.toLowerCase()
   )
   if (includeText) {
-    text = `${element.tagName.toLowerCase()} ${element.innerText}`
+    node.elementText = `${element.innerText}`
   }
 
-  // Add text for selected attributes, and show attribute name
-  const match = matchFirstAttribute(attributes, element.getAttributeNames())
-  if (match) {
-    text = `${match}: ${element.getAttribute(match)}`
-  }
-
-  // Initialise and return the tree
-  return {
-    tag: text,
-    children: [],
-  }
+  // Return the node
+  return node
 }
 
 const isValidNode = (node) => {
