@@ -123,6 +123,8 @@ const buildHtmlTree = (element) => {
 
 const createNode = (element) => {
   let text = element.tagName.toLowerCase()
+  const id = simpleUid()
+  element.setAttribute(`data-${chrome.runtime.id}`, id)
 
   // Add text for selected elements
   const includeText = treeElementsWithText.includes(
@@ -141,6 +143,7 @@ const createNode = (element) => {
   // Initialise and return the tree
   return {
     tag: text,
+    id: id,
     children: [],
   }
 }
