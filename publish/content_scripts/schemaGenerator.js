@@ -26,7 +26,7 @@ const generateTreeHtml = (tree) => {
 
   return `
     <details>
-        <summary>${button} ${tree.tag}</summary>
+        <summary>${nodeText}</summary>
         ${childrenHtml}
     </details>
 `
