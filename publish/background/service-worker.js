@@ -45,10 +45,29 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           }
         )
       })
+      break
     case 'highlightElement':
-      console.log(message.elementId)
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.scripting.executeScript(
+          {
+            target: { tabId: tabs[0].id },
+            func: sendFlashRequest,
+            args: [message.elementId],
+          },
+          (results) => {
+            if (chrome.runtime.lastError) {
+              console.error(chrome.runtime.lastError)
+            }
+          }
+        )
+      })
+      break
   }
 })
+
+function sendFlashRequest(elementId) {
+  flashElement(elementId)
+}
 
 function generateAndSendSchema() {
   const treeStructure = parseHtmlDocumentInBrowser()
