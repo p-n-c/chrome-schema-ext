@@ -42,6 +42,7 @@ const treeElements = [
   'progress',
   'search',
   'select',
+  'section',
   'summary',
   'table',
   'td',
