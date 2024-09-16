@@ -8,9 +8,21 @@
   <body>
     <h1>HTML Schema</h1>
     <h2 id="title-content">Page:</h2>
-    <button id="expand-schema">Expand</button>
-    <button id="collapse-schema">Collapse</button>
-    <button id="regenerate-schema">Regenerate ↺</button>
+    <div id="buttons">
+      <button id="expand-schema">Expand</button>
+      <button id="collapse-schema">Collapse</button>
+      <button id="regenerate-schema">Regenerate ↺</button>
+    </div>
+    <div id="display-controls">
+      <span class="checkbox-container">
+        <input type="checkbox" id="display-attribute" />
+        <label for="display-attribute">Attributes</label>
+      </span>
+      <span class="checkbox-container">
+        <input type="checkbox" id="display-element-text" />
+        <label for="display-element-text">Text</label>
+      </span>
+    </div>
     <div id="schema-content"></div>
     <script src="sidepanelScript.js"></script>
   </body>
