@@ -27,8 +27,6 @@ function toggleVisibility(className, isVisible) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Side panel DOM content loaded')
-
   chrome.contextMenus.create({
     // TODO check if it's already there
     id: 'mdn-consult',
@@ -82,14 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document
     .getElementById('regenerate-schema')
     .addEventListener('click', function () {
-      console.log('Regenerating schema')
       chrome.runtime.sendMessage({ action: 'displaySchema' })
     })
 
   document
     .getElementById('display-attribute')
     .addEventListener('change', function () {
-      console.log(document.getElementById('display-attribute').checked)
       toggleVisibility(
         'attribute',
         document.getElementById('display-attribute').checked

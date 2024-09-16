@@ -67,6 +67,10 @@ details div:last-child {
   color: white;
 }
 
+input[type='checkbox']:checked {
+  accent-color: black;
+}
+
 .attribute::before {
   content: '| ';
 }

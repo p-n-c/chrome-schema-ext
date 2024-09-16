@@ -13,6 +13,7 @@ const simpleUid = () =>
 
 const flashElement = (id) => {
   const dataAttribute = `data-${chrome.runtime.id}`
+  console.log(dataAttribute, id)
   const element = document.querySelector(`[${dataAttribute}="${id}"]`)
   if (!element) return
 
