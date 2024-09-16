@@ -67,6 +67,10 @@ details div:last-child {
   color: white;
 }
 
+input[type='checkbox']:checked {
+  accent-color: black;
+}
+
 .attribute::before {
   content: '| ';
 }
@@ -87,4 +91,8 @@ details div:last-child {
 
 .hidden {
   display: none;
+}
+
+.highlight-button {
+  color: black;
 }

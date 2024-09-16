@@ -125,11 +125,16 @@ const buildHtmlTree = (element) => {
 }
 
 const createNode = (element) => {
+  let text = element.tagName.toLowerCase()
+  const id = simpleUid()
+
+  element.setAttribute(`data-${chrome.runtime.id}`, id)
   const node = {
     tag: element.tagName.toLowerCase(),
     attribute: '',
     elementText: '',
     children: [],
+    id: id,
   }
 
   // Add text for selected attributes, and show attribute name
