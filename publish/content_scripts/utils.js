@@ -65,7 +65,6 @@ const flashElement = (id) => {
     setTimeout(() => {
       flashElement.style.opacity = '0'
       element.style.filter = elementFilter
-      element.style.transform = elementTransform
       // Remove the flash element and event listener after the animation
       setTimeout(() => {
         document.body.removeChild(flashElement)
