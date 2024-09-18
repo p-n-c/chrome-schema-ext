@@ -10,7 +10,6 @@ chrome.action.onClicked.addListener((tab) => {
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('Message received:', message)
   switch (message.action) {
     case 'displaySchema':
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {

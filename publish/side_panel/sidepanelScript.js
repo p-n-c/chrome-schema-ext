@@ -130,7 +130,6 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
 
 // Listen for tab updates
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  console.log('Triggering displaySchema')
   if (tabId === currentTabId && changeInfo.status === 'complete') {
     chrome.runtime.sendMessage({ action: 'displaySchema' })
   }
