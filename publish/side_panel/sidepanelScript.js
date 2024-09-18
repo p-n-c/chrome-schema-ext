@@ -1,3 +1,5 @@
+let currentTabId = null
+
 function openOrReloadWindow(url, windowName) {
   const parsedUrl = new URL(url)
   const baseUrl = `${parsedUrl.protocol}//${parsedUrl.hostname}`
@@ -47,7 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-  chrome.runtime.sendMessage({ action: 'displaySchema' })
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    currentTabId = tabs[0].id
+    chrome.runtime.sendMessage({ action: 'displaySchema' })
+  })
 
   document
     .getElementById('expand-schema')
@@ -73,6 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.tabId !== currentTabId) return
+
   if (message.action === 'updateSchema') {
     displaySchema(message.schema)
     document.querySelectorAll('.highlight-button').forEach((el) => {
@@ -82,6 +89,32 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           elementId: event.target.id,
         })
       })
+    })
+
+    // Restore open state
+    document.querySelectorAll('details').forEach((details) => {
+      details.addEventListener('toggle', function () {
+        chrome.runtime.sendMessage({
+          action: 'updateOpenState',
+          tabId: currentTabId,
+          elementId: this.querySelector('summary span.tag').id,
+          isOpen: this.open,
+        })
+      })
+
+      const elementId = details.querySelector('summary span.tag').id
+      chrome.runtime.sendMessage(
+        {
+          action: 'getOpenState',
+          tabId: currentTabId,
+          elementId,
+        },
+        (response) => {
+          if (response && response.isOpen) {
+            details.open = true
+          }
+        }
+      )
     })
   }
   if (message.action === 'updateTitle') {
@@ -102,3 +135,9 @@ function displayTitle(title) {
     titleContainer.innerHTML = 'Error: Extension loaded after page'
   else titleContainer.innerHTML = `Page: ${title}`
 }
+
+// Listen for tab changes
+chrome.tabs.onActivated.addListener((activeInfo) => {
+  currentTabId = activeInfo.tabId
+  chrome.runtime.sendMessage({ action: 'displaySchema' })
+})
