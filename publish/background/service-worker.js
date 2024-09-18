@@ -1,4 +1,3 @@
-// Add this at the top of the file
 const tabData = new Map()
 
 chrome.tabs.onRemoved.addListener((tabId) => {
@@ -16,25 +15,55 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'displaySchema':
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const currentTab = tabs[0]
-        chrome.scripting.executeScript(
-          {
-            target: { tabId: currentTab.id },
-            function: generateAndSendSchema,
-          },
-          (results) => {
-            if (chrome.runtime.lastError) {
-              console.error(chrome.runtime.lastError)
-            } else if (results && results[0]) {
-              const schemaData = results[0].result
-              tabData.set(currentTab.id, { schema: schemaData, openState: {} })
-              chrome.runtime.sendMessage({
-                action: 'updateSchema',
-                schema: schemaData,
-                tabId: currentTab.id,
-              })
+
+        if (!isWebPage(currentTab.url)) {
+          chrome.runtime.sendMessage({
+            action: 'notWebPage',
+            tabId: currentTab.id,
+            url: currentTab.url,
+          })
+          return
+        }
+
+        if (tabData.has(currentTab.id) && tabData.get(currentTab.id).schema) {
+          // Schema exists, send it to the sidepanel
+          chrome.runtime.sendMessage({
+            action: 'updateSchema',
+            schema: tabData.get(currentTab.id).schema,
+            tabId: currentTab.id,
+          })
+        } else {
+          // No schema, attempt to generate one
+          chrome.scripting.executeScript(
+            {
+              target: { tabId: currentTab.id },
+              function: generateAndSendSchema,
+            },
+            (results) => {
+              if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError)
+                chrome.runtime.sendMessage({
+                  action: 'noSchema',
+                  tabId: currentTab.id,
+                  error: chrome.runtime.lastError.message,
+                })
+              } else if (results && results[0]) {
+                const schemaData = results[0].result
+                tabData.set(currentTab.id, {
+                  schema: schemaData,
+                  openState: {},
+                })
+                chrome.runtime.sendMessage({
+                  action: 'updateSchema',
+                  schema: schemaData,
+                  tabId: currentTab.id,
+                })
+              }
             }
-          }
-        )
+          )
+        }
+
+        // Generate and send title
         chrome.scripting.executeScript(
           {
             target: { tabId: currentTab.id },
@@ -93,4 +122,10 @@ function generateAndSendSchema() {
 
 function generateTitle() {
   return getTitle()
+}
+
+function isWebPage(url) {
+  return (
+    url !== undefined && (url.startsWith('http:') || url.startsWith('https:'))
+  )
 }
