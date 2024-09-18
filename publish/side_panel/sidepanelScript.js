@@ -1,14 +1,21 @@
 let currentTabId = null
 
 document.addEventListener('DOMContentLoaded', () => {
-  chrome.contextMenus.create({
-    id: 'mdn-consult',
-    title: 'Search MDN for "%s"',
-    contexts: ['selection'],
-    documentUrlPatterns: [
-      `chrome-extension://${chrome.runtime.id}/side_panel/sidepanel.html`,
-    ],
-  })
+  chrome.contextMenus.create(
+    {
+      id: 'mdn-consult',
+      title: 'Search MDN for "%s"',
+      contexts: ['selection'],
+      documentUrlPatterns: [
+        `chrome-extension://${chrome.runtime.id}/side_panel/sidepanel.html`,
+      ],
+    },
+    () => {
+      if (chrome.runtime.lastError) {
+        // The menu item already exists, we can safely ignore this error
+      }
+    }
+  )
 
   document.addEventListener('contextmenu', () => {
     let selection = document.getSelection()
