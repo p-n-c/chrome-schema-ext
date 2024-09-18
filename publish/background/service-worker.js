@@ -55,7 +55,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 tabData.set(currentTab.id, {
                   schema: schemaData,
                   url: currentTab.url,
-                  openState: {},
                 })
                 chrome.runtime.sendMessage({
                   action: 'updateSchema',
@@ -102,14 +101,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           }
         )
       })
-      break
-    case 'updateOpenState':
-      const { tabId, elementId, isOpen } = message
-      if (tabData.has(tabId)) {
-        const data = tabData.get(tabId)
-        data.openState[elementId] = isOpen
-        tabData.set(tabId, data)
-      }
       break
   }
 })

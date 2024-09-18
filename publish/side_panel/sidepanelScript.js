@@ -48,12 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .querySelectorAll('details')
         .forEach((details) => (details.open = false))
     })
-
-  document
-    .getElementById('regenerate-schema')
-    .addEventListener('click', function () {
-      chrome.runtime.sendMessage({ action: 'displaySchema' })
-    })
 })
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -70,7 +64,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           })
         })
       })
-      restoreOpenState()
       break
     case 'noSchema':
       displayNoSchema(message.error)
@@ -87,24 +80,25 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 function displaySchema(schemaHTML) {
   const schemaContainer = document.getElementById('schema-content')
   if (schemaHTML === null) {
-    schemaContainer.innerHTML = 'Refresh page and hit Regenerate ↺'
+    schemaContainer.innerHTML = 'Refresh page to regenerate schema'
+    disablePanel(true)
   } else {
     schemaContainer.innerHTML = `${schemaHTML}`
+    disablePanel(false)
   }
-  enableControls()
 }
 
 function displayNoSchema(error) {
   const schemaContainer = document.getElementById('schema-content')
-  schemaContainer.innerHTML = `Unable to generate schema for this page. ${error ? `Error: ${error}` : 'Try refreshing the page or regenerating the schema.'}`
-  disableControls()
+  schemaContainer.innerHTML = `Unable to generate schema for this page. ${error ? `Error: ${error}` : 'Try refreshing the page.'}`
+  disablePanel(true)
 }
 
 function displayNotWebPage(url) {
   const schemaContainer = document.getElementById('schema-content')
   schemaContainer.innerHTML = `Schema generation is not available for this type of page (${url}). Only HTTP and HTTPS pages are supported.`
   displayTitle('N/A')
-  disableControls()
+  disablePanel(true)
 }
 
 function displayTitle(title) {
@@ -116,43 +110,9 @@ function displayTitle(title) {
   }
 }
 
-function enableControls() {
-  document.getElementById('expand-schema').disabled = false
-  document.getElementById('collapse-schema').disabled = false
-  document.getElementById('regenerate-schema').disabled = false
-}
-
-function disableControls() {
-  document.getElementById('expand-schema').disabled = true
-  document.getElementById('collapse-schema').disabled = true
-  document.getElementById('regenerate-schema').disabled = false
-}
-
-function restoreOpenState() {
-  document.querySelectorAll('details').forEach((details) => {
-    details.addEventListener('toggle', function () {
-      chrome.runtime.sendMessage({
-        action: 'updateOpenState',
-        tabId: currentTabId,
-        elementId: this.querySelector('summary span.tag').id,
-        isOpen: this.open,
-      })
-    })
-
-    const elementId = details.querySelector('summary span.tag').id
-    chrome.runtime.sendMessage(
-      {
-        action: 'getOpenState',
-        tabId: currentTabId,
-        elementId,
-      },
-      (response) => {
-        if (response && response.isOpen) {
-          details.open = true
-        }
-      }
-    )
-  })
+function disablePanel(isDisabled) {
+  document.body.style.pointerEvents = isDisabled ? 'none' : 'auto'
+  document.body.style.opacity = isDisabled ? '0.5' : '1'
 }
 
 // Listen for tab changes
