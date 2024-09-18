@@ -14,18 +14,6 @@ function extendSelectionToWord(selection) {
   selection.modify('extend', 'forward', 'word')
 }
 
-function toggleVisibility(className, isVisible) {
-  if (isVisible) {
-    document
-      .querySelectorAll(`.${className}`)
-      .forEach((el) => el.classList.remove('hidden'))
-  } else {
-    document
-      .querySelectorAll(`.${className}`)
-      .forEach((el) => el.classList.add('hidden'))
-  }
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   chrome.contextMenus.create({
     // TODO check if it's already there
@@ -81,24 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
     .getElementById('regenerate-schema')
     .addEventListener('click', function () {
       chrome.runtime.sendMessage({ action: 'displaySchema' })
-    })
-
-  document
-    .getElementById('display-attribute')
-    .addEventListener('change', function () {
-      toggleVisibility(
-        'attribute',
-        document.getElementById('display-attribute').checked
-      )
-    })
-
-  document
-    .getElementById('display-element-text')
-    .addEventListener('change', function () {
-      toggleVisibility(
-        'element-text',
-        document.getElementById('display-element-text').checked
-      )
     })
 })
 

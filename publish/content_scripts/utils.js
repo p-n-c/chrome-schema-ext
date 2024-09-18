@@ -30,13 +30,15 @@ const flashElement = (id) => {
   flashElement.style.left = rect.left - padding + 'px'
   flashElement.style.width = rect.width + padding * 2 + 'px'
   flashElement.style.height = rect.height + padding * 2 + 'px'
-  flashElement.style.backgroundColor = 'rgba(128, 128, 128, 0.5'
-  flashElement.style.border = '4px solid rgba(0, 0, 0, 1)'
   flashElement.style.boxSizing = 'border-box'
+  flashElement.style.backgroundColor = 'white'
+  flashElement.style.boxShadow = `inset 0 0 0 ${padding / 2}px black`
+  flashElement.style.border = '4px solid white'
   flashElement.style.opacity = '0'
   flashElement.style.pointerEvents = 'none'
   flashElement.style.transition = 'opacity 0.3s ease'
   flashElement.style.zIndex = '2147483647' // Maximum z-index value
+  flashElement.style.mixBlendMode = 'difference'
 
   // Add a non-breaking space to ensure the element is not considered "empty"
   flashElement.innerHTML = '&nbsp;'
@@ -57,8 +59,13 @@ const flashElement = (id) => {
   // Trigger the flash effect
   requestAnimationFrame(() => {
     flashElement.style.opacity = '1'
+    const elementFilter = element.style.filter
+    element.style.filter = elementFilter + ' blur(0.5px)' // Limit aliasing with mixBlendMode
+
     setTimeout(() => {
       flashElement.style.opacity = '0'
+      element.style.filter = elementFilter
+      element.style.transform = elementTransform
       // Remove the flash element and event listener after the animation
       setTimeout(() => {
         document.body.removeChild(flashElement)
