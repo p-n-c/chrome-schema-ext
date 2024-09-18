@@ -15,7 +15,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'displaySchema':
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const currentTab = tabs[0]
-
         if (!isWebPage(currentTab.url)) {
           chrome.runtime.sendMessage({
             action: 'notWebPage',
@@ -24,16 +23,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           })
           return
         }
-
-        if (tabData.has(currentTab.id) && tabData.get(currentTab.id).schema) {
-          // Schema exists, send it to the sidepanel
+        const currentTabData = tabData.get(currentTab.id)
+        if (
+          currentTabData &&
+          currentTabData.url === currentTab.url &&
+          currentTabData.schema
+        ) {
+          // Schema exists and matches the page, send it to the sidepanel
           chrome.runtime.sendMessage({
             action: 'updateSchema',
             schema: tabData.get(currentTab.id).schema,
             tabId: currentTab.id,
           })
         } else {
-          // No schema, attempt to generate one
+          // No schema or schema out of date, attempt to (re)generate one
           chrome.scripting.executeScript(
             {
               target: { tabId: currentTab.id },
@@ -51,6 +54,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 const schemaData = results[0].result
                 tabData.set(currentTab.id, {
                   schema: schemaData,
+                  url: currentTab.url,
                   openState: {},
                 })
                 chrome.runtime.sendMessage({
