@@ -73,3 +73,7 @@ const flashElement = (id) => {
     }, 1000) // Flash duration
   })
 }
+
+export const sum = (a, b) => {
+  return a + b
+}
