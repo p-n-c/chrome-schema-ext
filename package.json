@@ -8,7 +8,8 @@
   },
   "type": "module",
   "scripts": {
-    "tests": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "tests": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "tests:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch"
   },
   "jest": {
     "transform": {}
